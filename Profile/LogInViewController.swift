@@ -65,6 +65,7 @@ class LogInViewController: UIViewController {
         buttonDidPressed.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         buttonDidPressed.setTitle("Log In", for: .normal)
         buttonDidPressed.layer.cornerRadius = 10
+        buttonDidPressed.alpha = 1
         buttonDidPressed.tintColor = .white
         buttonDidPressed.translatesAutoresizingMaskIntoConstraints = false
         return buttonDidPressed
@@ -76,8 +77,16 @@ class LogInViewController: UIViewController {
         return dividingStrip
     }()
     
+    private let alertlabel: UILabel = {
+        let alertLabel = UILabel()
+        alertLabel.font = UIFont.boldSystemFont(ofSize: 10)
+        alertLabel.text = "Количество символов ниже необходимого"
+        alertLabel.translatesAutoresizingMaskIntoConstraints = false
+        alertLabel.isHidden = true
+        return alertLabel
+    }()
     
-    func hexStringToUIColor (hex:String) -> UIColor {
+    public func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         
         if (cString.hasPrefix("#")) {
@@ -99,12 +108,46 @@ class LogInViewController: UIViewController {
         )
     }
     
+    let login: String = "zebra@mail.ru"
+    let password: String = "paSsword142"
+    
+    let lowercase = CharacterSet.lowercaseLetters
+    let upperCase = CharacterSet.uppercaseLetters
+    
+    //   Действие появления рамки с ошибкой
+    //            let alert = UIAlertController(title: "Ошибка авторизации", message: "проверьте правильность ввода логиа и пароля", preferredStyle: .alert)
+    //            let cancelAction = UIAlertAction(title: "OK", style: .destructive)
+    //                alert.addAction(cancelAction)
+    //                present(alert, animated: true)
+    
     @objc func buttonPressed(sender: UIButton!) {
-        let bzz = UIImpactFeedbackGenerator(style: .light)
-        bzz.prepare()
-        bzz.impactOccurred()
-        let vc = ProfileViewController()
-        navigationController?.pushViewController(vc, animated: false)
+        
+        if topTextField.text?.count == 0 && bottomTextField.text?.count == 0 {
+            UIButton.animate(
+                withDuration: 1,
+                delay: 0.1,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 0.3,
+                options: .curveEaseInOut) {
+                    self.buttonDidPressed.backgroundColor = .red
+                } completion: { _ in
+                    UIButton.animate(withDuration: 1.0,
+                                     delay: 0.0) {
+                        let colorSet = self.hexStringToUIColor(hex: "#4885CC")
+                        self.buttonDidPressed.backgroundColor = colorSet
+                    }
+                }
+        } else if topTextField.text!.count < 5 && bottomTextField.text!.count < 5 {
+            alertlabel.isHidden = false
+        } else if topTextField.text != login && bottomTextField.text != password {
+            let alert = UIAlertController(title: "Ошибка авторизации", message: "проверьте правильность ввода логиа и пароля", preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "OK", style: .destructive)
+            alert.addAction(cancelAction)
+            present(alert, animated: true)
+        } else if topTextField.text == login && bottomTextField.text == password {
+            let vc = ProfileViewController()
+            self.navigationController?.pushViewController(vc, animated: false)
+        }
     }
     
     override func viewDidLoad() {
@@ -133,7 +176,7 @@ class LogInViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
-        [vkImage, stackViewText, buttonDidPressed].forEach({ contentView.addSubview($0) })
+        [vkImage, stackViewText, buttonDidPressed, alertlabel].forEach({ contentView.addSubview($0) })
         
         [topTextField, dividingStrip, bottomTextField].forEach {stackViewText.addArrangedSubview($0) }
         
@@ -161,7 +204,10 @@ class LogInViewController: UIViewController {
             buttonDidPressed.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             buttonDidPressed.heightAnchor.constraint(equalToConstant: 50),
             buttonDidPressed.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            buttonDidPressed.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            buttonDidPressed.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            alertlabel.topAnchor.constraint(equalTo: stackViewText.bottomAnchor, constant: 3),
+            alertlabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
     }
 }
