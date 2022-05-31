@@ -41,10 +41,11 @@ class PhotosTableViewCell: UITableViewCell {
     private lazy var collectionView: UICollectionView = {
         let layoutCollectionView = UICollectionViewFlowLayout()
         layoutCollectionView.scrollDirection = .horizontal
-        
+
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layoutCollectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
+        collectionView.contentMode = .scaleAspectFill
         collectionView.dataSource = self
         collectionView.delegate = self
         return collectionView
@@ -111,13 +112,15 @@ extension PhotosTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-        cell.setupCell(photo: photos[indexPath.row])
+        cell.setupCell(with: photos[indexPath.row])
         cell.layer.cornerRadius = 6
-        cell.backgroundColor = .systemGray4
+        cell.backgroundColor = .white
         cell.clipsToBounds = true
         return cell
     }
-}
+        
+    }
+
 
 
 // MARK: - UICollectionViewDelegate
@@ -140,4 +143,5 @@ extension PhotosTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         8
     }
+    
 }

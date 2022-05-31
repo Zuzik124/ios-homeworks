@@ -114,12 +114,6 @@ class LogInViewController: UIViewController {
     let lowercase = CharacterSet.lowercaseLetters
     let upperCase = CharacterSet.uppercaseLetters
     
-    //   Действие появления рамки с ошибкой
-    //            let alert = UIAlertController(title: "Ошибка авторизации", message: "проверьте правильность ввода логиа и пароля", preferredStyle: .alert)
-    //            let cancelAction = UIAlertAction(title: "OK", style: .destructive)
-    //                alert.addAction(cancelAction)
-    //                present(alert, animated: true)
-    
     @objc func buttonPressed(sender: UIButton!) {
         
         if topTextField.text?.count == 0 && bottomTextField.text?.count == 0 {
@@ -137,10 +131,10 @@ class LogInViewController: UIViewController {
                         self.buttonDidPressed.backgroundColor = colorSet
                     }
                 }
-        } else if topTextField.text!.count < 5 && bottomTextField.text!.count < 5 {
+        } else if topTextField.text!.count < 5 || bottomTextField.text!.count < 5 {
             alertlabel.isHidden = false
         } else if topTextField.text != login && bottomTextField.text != password {
-            let alert = UIAlertController(title: "Ошибка авторизации", message: "проверьте правильность ввода логиа и пароля", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Ошибка авторизации", message: "проверьте правильность ввода логина и пароля", preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: "OK", style: .destructive)
             alert.addAction(cancelAction)
             present(alert, animated: true)
@@ -153,7 +147,7 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        var colorSet = hexStringToUIColor(hex: "#4885CC")
+        let colorSet = hexStringToUIColor(hex: "#4885CC")
         buttonDidPressed.backgroundColor = colorSet
         view.addSubview(scrollView)
         
@@ -164,7 +158,7 @@ class LogInViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
         
@@ -172,7 +166,8 @@ class LogInViewController: UIViewController {
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+//            для работы при развороте экрана
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -400),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
@@ -185,11 +180,11 @@ class LogInViewController: UIViewController {
             vkImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             vkImage.widthAnchor.constraint(equalToConstant: 100),
             vkImage.heightAnchor.constraint(equalToConstant: 100),
-            
-            stackViewText.topAnchor.constraint(equalTo: vkImage.bottomAnchor, constant: 120),
-            stackViewText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+        
+            stackViewText.topAnchor.constraint(equalTo: vkImage.safeAreaLayoutGuide.bottomAnchor, constant: 120),
+            stackViewText.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             stackViewText.heightAnchor.constraint(equalToConstant: 100),
-            stackViewText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackViewText.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
             topTextField.leadingAnchor.constraint(equalTo: stackViewText.leadingAnchor, constant: 16),
             
@@ -201,9 +196,9 @@ class LogInViewController: UIViewController {
             bottomTextField.leadingAnchor.constraint(equalTo: stackViewText.leadingAnchor, constant: 16),
             
             buttonDidPressed.topAnchor.constraint(equalTo: stackViewText.bottomAnchor, constant: 16),
-            buttonDidPressed.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            buttonDidPressed.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             buttonDidPressed.heightAnchor.constraint(equalToConstant: 50),
-            buttonDidPressed.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            buttonDidPressed.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             buttonDidPressed.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             alertlabel.topAnchor.constraint(equalTo: stackViewText.bottomAnchor, constant: 3),
@@ -211,3 +206,5 @@ class LogInViewController: UIViewController {
         ])
     }
 }
+    
+

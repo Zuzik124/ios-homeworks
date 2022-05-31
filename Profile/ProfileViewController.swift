@@ -9,9 +9,10 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    
     // MARK: - Private Properties
     
-    private let postModel: [[PostModel]] = PostModel.makeSomePost()
+    private var postModel = PostModel.makeSomePost()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -67,7 +68,10 @@ extension ProfileViewController: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
-            cell.setupCell(postModel[indexPath.section][indexPath.row])
+            cell.delegate = self
+            cell.delegateView = self
+            cell.tag = indexPath.row
+            cell.setupCell(postModel[indexPath.row])
             return cell
         }
     }
@@ -91,7 +95,7 @@ extension ProfileViewController: UITableViewDelegate {
             navigationController?.pushViewController(photosVC, animated: true)
         default:
             let detailVC = PostViewController()
-            detailVC.setupVC(model: postModel[indexPath.section][indexPath.row])
+            detailVC.setupVC(model: postModel[indexPath.row])
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
@@ -110,3 +114,31 @@ extension ProfileViewController: UITableViewDelegate {
         }
     }
 }
+
+
+// MARK: - CustomPostTableleCellDelegate
+
+extension ProfileViewController: CustomPostTableleCellDelegate {
+    func liked(like: UILabel, cell: CustomTableViewCell) {
+        var strLike = like.text
+        var intLike = String(strLike!.dropFirst(6))
+        like.text = "Likes:\((Int(intLike) ?? 0) + 1)"
+        postModel[cell.tag].likes += 1
+    }
+}
+
+// MARK: - PostViewControllerDelegate
+
+extension ProfileViewController: PostViewControllerDelegate {
+    
+    func viewing(views: UILabel, cell: CustomTableViewCell) {
+        var strView = views.text
+        var intView = String(strView!.dropFirst(6))
+        views.text = "Views:\((Int(intView) ?? 0) + 1)"
+        postModel[cell.tag].views += 1
+        let detailVC = PostViewController()
+        detailVC.setupVC(model: postModel[cell.tag])
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+

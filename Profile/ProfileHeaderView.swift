@@ -114,8 +114,12 @@ class ProfileHeaderView: UIView {
     }
     
     @objc func buttonPressed(_ sender: UIButton!) {
+        if statusTextField.text?.count == 0 {
+            hearLabel.text = "Введите статус"
+        } else {
         hearLabel.text = statusTextField.text
         print(hearLabel.text ?? statusTextField.placeholder)
+    }
     }
     
     
@@ -228,6 +232,7 @@ class ProfileHeaderView: UIView {
             usingSpringWithDamping: 1,
             initialSpringVelocity: 0.3,
             options: .curveEaseInOut) {
+                self.closeAnimationButton.isHidden = true
                 self.catImageView.center = CGPoint(x: self.catViewX, y: self.catViewY)
                 self.topCatImageView.constant = self.bounds.minY + 16
                 self.leadingCatImageView.isActive = true
