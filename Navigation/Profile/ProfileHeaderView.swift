@@ -47,7 +47,8 @@ class ProfileHeaderView: UIView {
     
     private lazy var profileLabel: UILabel = {
         let profile = UILabel()
-        profile.font = UIFont.boldSystemFont(ofSize: 18)
+        profile.font = UIFont.boldSystemFont(ofSize: 15)
+        profile.textColor = UIColor.gray
         profile.text = "Profile"
         profile.translatesAutoresizingMaskIntoConstraints = false
         return profile
@@ -115,10 +116,10 @@ class ProfileHeaderView: UIView {
     
     @objc func buttonPressed(_ sender: UIButton!) {
         if statusTextField.text?.count == 0 {
-            hearLabel.text = "Введите статус"
+            profileLabel.text = "Введите статус"
         } else {
-        hearLabel.text = statusTextField.text
-        print(hearLabel.text ?? statusTextField.placeholder)
+            profileLabel.text = statusTextField.text
+        print(profileLabel.text ?? statusTextField.placeholder)
     }
     }
     
@@ -144,7 +145,7 @@ class ProfileHeaderView: UIView {
         
         addSubview(whiteView)
         
-        [hearLabel, statusButton, statusTextField, blackView, mainView, catImageView].forEach {whiteView.addSubview($0)}
+        [hearLabel, statusButton, statusTextField, blackView, mainView, profileLabel, catImageView].forEach {whiteView.addSubview($0)}
         
         
         blackView.addSubview(closeAnimationButton)
@@ -187,7 +188,12 @@ class ProfileHeaderView: UIView {
             closeAnimationButton.topAnchor.constraint(equalTo: blackView.topAnchor),
             closeAnimationButton.trailingAnchor.constraint(equalTo: blackView.trailingAnchor),
             
-            statusTextField.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -34),
+            profileLabel.bottomAnchor.constraint(equalTo: statusTextField.topAnchor,constant: -10),
+            profileLabel.leadingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 27),
+            profileLabel.heightAnchor.constraint(equalToConstant: 15),
+            profileLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            
+            statusTextField.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -14),
             statusTextField.leadingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 27),
             statusTextField.heightAnchor.constraint(equalToConstant: 40),
             statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
